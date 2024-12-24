@@ -1,1 +1,182 @@
-# tg-biedronka
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Warning</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: "Courier New", Courier, monospace;
+            text-align: center;
+            padding-top: 50px;
+            overflow: hidden;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        h1 {
+            font-size: 2.5em;
+        }
+        .warning {
+            color: red;
+            font-weight: bold;
+        }
+        .blink {
+            animation: blinker 1s step-start infinite;
+        }
+        @keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
+        #code-animation {
+            font-size: 0.7em;
+            line-height: 1.3em;
+            white-space: pre-wrap;
+            text-align: left;
+            margin: 10px auto;
+            width: 95%;
+            max-height: 300px;
+            overflow-y: auto;
+            position: relative;
+            color: white;
+        }
+        #main-message {
+            display: none;
+        }
+        #timer {
+            font-size: 2em;
+            color: red;
+        }
+        .link {
+            color: #00FF00;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .disabled-link {
+            color: #999999;
+            text-decoration: none;
+            cursor: not-allowed;
+        }
+    </style>
+    <script>
+        // Проверка, была ли ссылка уже открыта
+        function checkLinkStatus() {
+            const linkStatus = localStorage.getItem('linkClicked');
+            if (linkStatus === 'true') {
+                document.getElementById('link').classList.add('disabled-link');
+                document.getElementById('link').textContent = "Ссылка уже использована.";
+            } else {
+                document.getElementById('link').addEventListener('click', () => {
+                    localStorage.setItem('linkClicked', 'true');
+                    alert("Ссылка использована!");
+                    document.getElementById('link').classList.add('disabled-link');
+                    document.getElementById('link').textContent = "Ссылка уже использована.";
+                });
+            }
+        }
+
+        // Строки кода
+        const codeLines = [
+            "Init...",
+            "Verifying...",
+            "Scanning...",
+            "Bypassing firewall...",
+            "Connecting...",
+            "Access granted.",
+            "Security bypass complete.",
+            "Identifying target...",
+            "Target located.",
+            "Injecting script...",
+            "Payload delivered.",
+            "Overriding system...",
+            "Error: Unauthorized access.",
+            "Clearing logs...",
+            "Finalizing operation...",
+            "Encryption successful.",
+            "Deploying self-destruct...",
+            "Executing self-destruction..."
+        ];
+
+        function runCodeAnimation(callback) {
+            const codeElement = document.getElementById("code-animation");
+            codeElement.style.display = "block";
+            let lineIndex = 0;
+
+            function addNextLine() {
+                if (lineIndex < codeLines.length) {
+                    const lineText = codeLines[lineIndex];
+                    let span = document.createElement("span");
+                    span.textContent = lineText + "\n";
+                    span.style.color = lineIndex % 2 === 0 ? "white" : "red";
+                    span.style.fontWeight = lineIndex % 3 === 0 ? "bold" : "normal";
+
+                    codeElement.appendChild(span);
+                    lineIndex++;
+                    setTimeout(addNextLine, Math.random() * 300 + 100); // Переменная скорость
+                } else {
+                    setTimeout(callback, 1000); // Пауза перед основным сообщением
+                }
+            }
+
+            addNextLine();
+        }
+
+        // Функция для работы с таймером
+        function startCountdown() {
+            let timerElement = document.getElementById("timer");
+            let remainingTime = localStorage.getItem('remainingTime') ? parseInt(localStorage.getItem('remainingTime')) : 30 * 60;
+
+            function updateTimer() {
+                let minutes = Math.floor(remainingTime / 60);
+                let seconds = remainingTime % 60;
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                timerElement.textContent = `${minutes}:${seconds}`;
+
+                if (remainingTime > 0) {
+                    remainingTime--;
+                    localStorage.setItem('remainingTime', remainingTime); // Обновляем оставшееся время
+                } else {
+                    clearInterval(timerInterval);
+                    timerElement.textContent = "Время истекло!";
+                }
+            }
+
+            updateTimer();
+            let timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        window.onload = function () {
+            checkLinkStatus(); // Проверяем статус ссылки
+            runCodeAnimation(() => {
+                document.getElementById("code-animation").style.display = "none";
+                document.getElementById("main-message").style.display = "block";
+                startCountdown(); // Начинаем отсчет таймера
+            });
+        };
+    </script>
+</head>
+<body>
+    <!-- Анимация кода -->
+    <div id="code-animation"></div>
+
+    <!-- Основное сообщение -->
+    <div id="main-message">
+        <h1 class="warning">⚠ SYSTEM WARNING ⚠</h1>
+        <p>"Перезвони!"</p>
+        <p class="warning blink">ОСТАЛОСЬ ВРЕМЕНИ:</p>
+        <div id="timer">30:00</div>
+        <p>Принять меры... или система начнёт <span class="warning">самоуничтожение</span>.</p>
+        <p style="margin-top: 50px;">Системы всех, кто рядом с тобой, тоже через 30 минут начнут самоуничтожение.</p>
+        <p>Ты сам запустил скрипт, и я тебя предупреждал. <span class="warning">Собственно, удачи!</span> Думай быстрее!</p>
+        <p><span id="link" class="link">Перейти по ссылке</span></p>
+    </div>
+</body>
+</html>
