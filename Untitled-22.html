@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Loading</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: "Courier New", Courier, monospace;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        #code-animation {
+            font-size: 0.7em;
+            line-height: 1.3em;
+            white-space: pre-wrap;
+            text-align: left;
+            width: 95%;
+            max-height: 70%;
+            overflow-y: auto;
+            color: white;
+        }
+        #progress-percentage {
+            font-size: 1.2em;
+            color: white;
+            margin-bottom: 10px;
+            display: none;
+        }
+        #progress-bar-container {
+            width: 80%;
+            height: 20px;
+            background-color: #fff;
+            border: 2px solid #000;
+            margin-top: 20px;
+            position: relative;
+            display: none;
+        }
+        #progress-bar {
+            height: 100%;
+            background-color: #000;
+            width: 0;
+            transition: width 0.1s linear;
+        }
+    </style>
+    <script>
+        // Проверка на повторное открытие страницы
+        if (localStorage.getItem('pageOpened') === 'true') {
+            document.write('<h1 style="color:red; text-align:center;">Эта страница больше недоступна.</h1>');
+            setTimeout(() => window.close(), 2000); // Закрываем вкладку через 2 секунды
+        } else {
+            // Сохраняем состояние страницы как "открыта"
+            localStorage.setItem('pageOpened', 'true');
+        }
+
+        // Строки кода (27 строк)
+        const codeLines = [
+            "Initializing system...",
+            "Loading kernel modules...",
+            "Verifying hardware integrity...",
+            "Scanning connected devices...",
+            "Decrypting sensitive data...",
+            "Connecting to the main server...",
+            "Establishing secure connection...",
+            "Bypassing security protocols...",
+            "Uploading payload to server...",
+            "Executing remote commands...",
+            "Clearing temporary files...",
+            "Overriding user privileges...",
+            "Injecting malicious script...",
+            "Clearing server logs...",
+            "Rewriting boot sequence...",
+            "Finalizing operations...",
+            "Encrypting all user data...",
+            "Scanning network for additional nodes...",
+            "Creating backup snapshots...",
+            "Injecting API keys...",
+            "Starting virtual machine instances...",
+            "Deploying system packages...",
+            "Initializing monitoring tools...",
+            "Establishing data pipelines...",
+            "Launching background tasks...",
+            "System override complete.",
+            "Preparing to finalize."
+        ];
+
+        // Анимация строк кода
+        function runCodeAnimation(callback) {
+            const codeElement = document.getElementById("code-animation");
+            let lineIndex = 0;
+
+            function addNextLine() {
+                if (lineIndex < codeLines.length) {
+                    const lineText = codeLines[lineIndex];
+                    let span = document.createElement("span");
+                    span.textContent = lineText + "\n";
+                    span.style.color = lineIndex % 2 === 0 ? "white" : "#888";
+                    codeElement.appendChild(span);
+                    lineIndex++;
+                    setTimeout(addNextLine, Math.random() * 300 + 100); // Переменная скорость вывода
+                } else {
+                    callback(); // Переход к прогресс-бару
+                }
+            }
+
+            addNextLine();
+        }
+
+        // Анимация прогресс-бара
+        function runProgressBar() {
+            const progressBarContainer = document.getElementById("progress-bar-container");
+            const progressBar = document.getElementById("progress-bar");
+            const progressPercentage = document.getElementById("progress-percentage");
+
+            progressBarContainer.style.display = "block";
+            progressPercentage.style.display = "block";
+
+            let progress = 0;
+
+            function updateProgressBar() {
+                if (progress < 100) {
+                    progress += 1;
+                    progressBar.style.width = progress + "%";
+                    progressPercentage.textContent = `Loading... ${progress}%`;
+                    setTimeout(updateProgressBar, 50); // Скорость загрузки
+                } else {
+                    // Закрываем вкладку после завершения прогресса
+                    setTimeout(() => {
+                        window.close();
+                    }, 1000);
+                }
+            }
+
+            updateProgressBar();
+        }
+
+        window.onload = function () {
+            if (localStorage.getItem('pageOpened') !== 'true') {
+                runCodeAnimation(() => {
+                    runProgressBar();
+                });
+            }
+        };
+    </script>
+</head>
+<body>
+    <!-- Анимация кода -->
+    <div id="code-animation"></div>
+
+    <!-- Прогресс-бар -->
+    <div id="progress-percentage"></div>
+    <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+    </div>
+</body>
+</html>
